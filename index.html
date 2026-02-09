@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MIR4 - Presença SCOUT SA21</title>
-    <meta name="description" content="Controle de presença do clã SCOUT no MIR4 - Servidor SA21">
+    <title>MIR4 - Presença SCALT SA21</title>
+    <meta name="description" content="Controle de presença do clã SCALT no MIR4 - Servidor SA21">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL@20..48,100..700,0..1" rel="stylesheet">
@@ -595,6 +595,51 @@
         .stat-pill strong { color: var(--text-primary); font-family: var(--font-display); font-weight: 800; }
 
         /* ========================================
+           NAV TABS
+           ======================================== */
+        .nav-tabs {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 32px;
+            padding: 5px;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 10px 22px;
+            border-radius: 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-gradient);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(124, 106, 255, 0.35);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ========================================
            FOOTER
            ======================================== */
         footer {
@@ -653,7 +698,7 @@
     <header class="hero">
         <div class="hero-grid"></div>
         <div class="hero-content">
-            <h1>SCOUT</h1>
+            <h1>SCALT</h1>
             <p class="subtitle">Controle de Presença</p>
             <span class="server-badge">⚔ Servidor SA21 — MIR4</span>
         </div>
@@ -664,85 +709,101 @@
         <!-- STATS RESUMO -->
         <div class="stats-bar" id="statsBar"></div>
 
-        <!-- GRÁFICOS -->
-        <section class="section">
-            <div class="section-header">
-                <h2>📈 Gráficos</h2>
-                <span class="badge">Análise Visual</span>
-            </div>
-            <div class="charts-grid">
-                <div class="chart-card">
-                    <h3>Presença por Dia da Semana</h3>
-                    <canvas id="chartDia"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3>Presença por Horário</h3>
-                    <canvas id="chartHorario"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3>Top 10 — Mais Presentes</h3>
-                    <canvas id="chartTop10"></canvas>
-                </div>
-                <div class="chart-card">
-                    <h3>Distribuição de Presenças</h3>
-                    <canvas id="chartDistribuicao"></canvas>
-                </div>
-            </div>
-        </section>
+        <!-- NAV TABS -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTab('planilha')">📊 Planilha ao Vivo</button>
+            <button class="nav-tab" onclick="switchTab('graficos')">📈 Gráficos</button>
+            <button class="nav-tab" onclick="switchTab('ranking')">🏆 Ranking</button>
+            <button class="nav-tab" onclick="switchTab('tabela')">📋 Tabela de Presença</button>
+        </nav>
 
-        <!-- RANKING -->
-        <section class="section">
-            <div class="section-header">
-                <h2>🏆 Últimos 7 dias</h2>
-                <span class="badge">Semanal</span>
-            </div>
-            <div class="ranking-grid" id="rankingGrid"></div>
-        </section>
+        <!-- TAB: PLANILHA -->
+        <div class="tab-content active" id="tab-planilha">
+            <section class="section">
+                <div class="sheet-card">
+                    <div class="section-header">
+                        <h2>📊 Planilha ao Vivo</h2>
+                        <span class="badge">Google Sheets — Automático</span>
+                    </div>
+                    <div class="stats-strip">
+                        <div class="stat-pill">
+                            <span class="material-symbols-rounded">sync</span>
+                            <span>Atualização <strong>Automática</strong></span>
+                        </div>
+                        <div class="stat-pill">
+                            <span class="material-symbols-rounded">calendar_month</span>
+                            <span>Semana <strong id="weekLabel"></strong></span>
+                        </div>
+                    </div>
+                    <div class="iframe-wrapper">
+                        <iframe
+                            src="https://docs.google.com/spreadsheets/d/e/2PACX-1vTOFRHyIV9PyU8dqvRXohuArcf4rwvIOGeyDmPvZ2w6GEiXo72S4eALFt25w_Qpw-HGWYQKRnUusYM2/pubhtml?widget=true&headers=false&chrome=false"
+                            frameborder="0"
+                            width="100%"
+                            height="900"
+                            style="border: none; border-radius: 12px;"
+                            allowfullscreen
+                        ></iframe>
+                    </div>
+                </div>
+            </section>
+        </div>
 
-        <!-- TABELA COMPLETA -->
-        <section class="section">
-            <div class="section-header">
-                <h2>📋 Tabela de Presença</h2>
-                <span class="badge">Últimos 7 dias</span>
-            </div>
-            <div class="table-wrapper" id="tableWrapper"></div>
-        </section>
-
-        <!-- PLANILHA GOOGLE SHEETS -->
-        <section class="section">
-            <div class="sheet-card">
+        <!-- TAB: GRÁFICOS -->
+        <div class="tab-content" id="tab-graficos">
+            <section class="section">
                 <div class="section-header">
-                    <h2>📊 Planilha ao Vivo</h2>
-                    <span class="badge">Google Sheets — Automático</span>
+                    <h2>📈 Gráficos</h2>
+                    <span class="badge">Análise Visual</span>
                 </div>
-                <div class="stats-strip">
-                    <div class="stat-pill">
-                        <span class="material-symbols-rounded">sync</span>
-                        <span>Atualização <strong>Automática</strong></span>
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Presença por Dia da Semana</h3>
+                        <canvas id="chartDia"></canvas>
                     </div>
-                    <div class="stat-pill">
-                        <span class="material-symbols-rounded">calendar_month</span>
-                        <span>Semana <strong>09/02 — 15/02</strong></span>
+                    <div class="chart-card">
+                        <h3>Presença por Horário</h3>
+                        <canvas id="chartHorario"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Top 10 — Mais Presentes</h3>
+                        <canvas id="chartTop10"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Distribuição de Presenças</h3>
+                        <canvas id="chartDistribuicao"></canvas>
                     </div>
                 </div>
-                <div class="iframe-wrapper">
-                    <iframe
-                        src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ1J1QxtX3_XqEgl5c1C60NLYU5rrIE6QbKeyWbuZHS4tI2R1tFHJKIxCXagwUWQcjSOVL36lQJZ9Fz/pubhtml?gid=2064760353&single=true"
-                        frameborder="0"
-                        width="100%"
-                        height="900"
-                        style="border: none; border-radius: 12px;"
-                        allowfullscreen
-                    ></iframe>
+            </section>
+        </div>
+
+        <!-- TAB: RANKING -->
+        <div class="tab-content" id="tab-ranking">
+            <section class="section">
+                <div class="section-header">
+                    <h2>🏆 Ranking de Presença</h2>
+                    <span class="badge">Semanal</span>
                 </div>
-            </div>
-        </section>
+                <div class="ranking-grid" id="rankingGrid"></div>
+            </section>
+        </div>
+
+        <!-- TAB: TABELA -->
+        <div class="tab-content" id="tab-tabela">
+            <section class="section">
+                <div class="section-header">
+                    <h2>📋 Tabela de Presença</h2>
+                    <span class="badge">Detalhada</span>
+                </div>
+                <div class="table-wrapper" id="tableWrapper"></div>
+            </section>
+        </div>
 
     </main>
 
     <footer>
-        <p class="clan-name">SCOUT — MIR4</p>
-        <p>Atualizado automaticamente via Google Sheets • Servidor SA21 • Blood </p>
+        <p class="clan-name">SCALT — MIR4</p>
+        <p>Atualizado automaticamente via Google Sheets • Servidor SA21</p>
     </footer>
 
     <script>
@@ -753,47 +814,43 @@
     const DIAS = ["SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO", "DOMINGO"];
     const HORARIOS = ["10H", "12H", "20H", "22H", "00H"];
 
-   const JOGADORES = [
-    { nome: "SENIOR96", presenca: [[true,false,false,false,false],[true,false,true,true,true],[false,false,true,false,true],[true,true,false,false,false],[false,false,true,true,true],[false,false,true,true,false],[false,false,false,false,false]] },
-    { nome: "EXO 丶Rayvèn", presenca: [[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,true,true,false],[false,false,false,false,false],[true,true,false,false,false],[false,false,false,false,false]] },
-    { nome: "Wedeed420", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,true,false,false,false],[false,false,false,false,false]] },
-    { nome: "S7 Glauber", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false]] },
-    { nome: "鸩Pixie丶升级版", presenca: [[false,false,false,false,false],[false,false,true,false,false],[false,false,true,false,false],[false,false,false,true,false],[false,false,true,true,false],[false,true,false,false,false],[false,false,false,false,false]] },
-    { nome: "Rebel Byob ジ", presenca: [[false,false,false,false,false],[false,false,true,true,true],[false,false,true,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,true,false,false],[false,false,false,false,false]] },
-    { nome: "Psychodavid", presenca: [[false,true,false,false,false],[true,false,false,true,true],[true,false,true,false,true],[false,false,true,true,false],[true,false,true,false,false],[true,false,false,true,false],[false,false,false,false,false]] },
-    { nome: "SíweL", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "メBloodCrossメ", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[true,false,true,true,false],[true,true,false,true,true],[false,true,false,true,false],[false,false,false,false,false]] },
-    { nome: "andersong30", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "LunadeLuz", presenca: [[true,false,false,false,false],[true,false,false,false,false],[true,false,false,false,false],[true,false,false,true,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false]] },
-    { nome: "77 Thug 火", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,true,true,false],[true,false,false,true,false],[true,true,true,false,false],[false,false,false,false,false]] },
-    { nome: "Pescadora 花月", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Pujone ツ", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "ELFO''", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "LaeTShin", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "PICADORMX", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Luffy", presenca: [[false,false,false,false,false],[false,false,true,true,false],[false,false,false,false,false],[false,false,true,true,false],[false,false,true,false,false],[false,false,false,true,false],[false,false,false,false,false]] },
-    { nome: "thago", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Violeta", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,true,false],[false,false,true,true,false],[false,false,false,false,false]] },
-    { nome: "vladesko", presenca: [[false,false,false,false,false],[false,false,false,true,true],[true,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Chaos Sunny", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,true,false],[false,false,true,true,true],[false,false,false,false,false]] },
-    { nome: "Tuero", presenca: [[true,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Hey Bye", presenca: [[true,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "77REAPERWins", presenca: [[false,false,false,false,false],[false,false,true,false,false],[false,false,true,false,true],[false,false,true,false,false],[false,false,false,true,false],[false,false,true,false,false],[false,false,false,false,false]] },
-    { nome: "Adonis 333", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false]] },
-    { nome: "ivanvulman", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "VenManCo", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "CMPUNK", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false]] },
-    { nome: "jeonyeon", presenca: [[false,false,false,false,false],[false,false,false,false,false],[true,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "Rhovania", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,true,true],[false,false,false,true,true],[false,false,false,false,false]] },
-    { nome: "Soleyi", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "bumbum", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[true,true,false,true,false],[true,true,false,true,false],[false,true,true,false,false],[false,false,false,false,false]] },
-    { nome: "Diana Rivera", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,true,false,false],[false,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
-    { nome: "VKSxBRABO", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,true,false,true],[false,false,false,false,false]] },
-    { nome: "ANYA CHAAN", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false]] },
-    { nome: "Barbarella", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false]] },
-    { nome: "JDioses", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false]] },
-    { nome: "Precation", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false]] },
-];
+    const JOGADORES = [
+        { nome: "SENIOR96", presenca: [[true,false,false,false,false],[true,false,true,true,true],[false,false,true,false,true],[true,true,false,false,false],[false,false,true,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "EXO 丶Rayvèn", presenca: [[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,true,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Wedeed", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "glauber", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "pixie", presenca: [[false,false,false,false,false],[false,false,true,false,false],[false,false,true,false,false],[false,false,false,true,false],[false,false,true,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Rebel Byob", presenca: [[false,false,false,false,false],[false,false,true,true,true],[false,false,true,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Psychodavid", presenca: [[false,true,false,false,false],[true,false,false,true,true],[true,false,true,false,true],[false,false,true,true,false],[true,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Siwel", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "bloodcross", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[true,false,true,true,false],[true,true,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Euphoria", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "andersong30", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "LunadeLuz", presenca: [[true,false,false,false,false],[true,false,false,false,false],[true,false,false,false,false],[true,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "77 thung", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,true,true,false],[true,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Pescadora", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "pujone", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "elfo", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "laetshin", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "picador", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Lutien", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Luffy", presenca: [[false,false,false,false,false],[false,false,true,true,false],[false,false,false,false,false],[false,false,true,true,false],[false,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "thago", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Violeta", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "vladesko", presenca: [[false,false,false,false,false],[false,false,false,true,true],[true,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Dsjunior", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Adonis 333", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "ivanvulman", presenca: [[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "VenManCo", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "CMPUNK", presenca: [[false,false,false,false,false],[false,false,false,false,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "jeonyeon", presenca: [[false,false,false,false,false],[false,false,false,false,false],[true,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Rhovania", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,true],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Soleyi", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "bumbum", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[true,true,false,true,false],[true,true,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "Diana Rivera", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,true,false,false],[false,false,true,false,false],[false,false,false,false,false],[false,false,false,false,false]] },
+        { nome: "VKS", presenca: [[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,false,false],[false,false,false,true,false],[false,false,false,false,false],[false,false,false,false,false]] },
+    ];
+
     /* ==========================================================================
        FUNÇÕES AUXILIARES
        ========================================================================== */
@@ -1024,13 +1081,45 @@
     }
 
     /* ==========================================================================
+       SEMANA AUTOMÁTICA
+       ========================================================================== */
+    function updateWeekLabel() {
+        const now = new Date();
+        const day = now.getDay(); // 0=Dom
+        const diffToMon = day === 0 ? -6 : 1 - day;
+        const monday = new Date(now);
+        monday.setDate(now.getDate() + diffToMon);
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+        const fmt = d => String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+        document.getElementById('weekLabel').textContent = fmt(monday) + ' — ' + fmt(sunday);
+    }
+
+    /* ==========================================================================
+       NAVEGAÇÃO POR ABAS
+       ========================================================================== */
+    let chartsRendered = false;
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        event.currentTarget.classList.add('active');
+
+        if (tab === 'graficos' && !chartsRendered) {
+            chartsRendered = true;
+            renderCharts();
+        }
+    }
+
+    /* ==========================================================================
        INICIALIZAR
        ========================================================================== */
     document.addEventListener('DOMContentLoaded', () => {
+        updateWeekLabel();
         renderStats();
         renderTable();
         renderRanking();
-        renderCharts();
     });
     </script>
 
