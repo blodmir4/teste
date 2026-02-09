@@ -1,0 +1,32 @@
+name: Ofuscar e Enviar para Cloudflare
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar e Rodar Ofuscador
+        run: |
+          npm install -g javascript-obfuscator
+          # Isso pega seu index.html e arquivos JS e cria uma versão protegida na pasta 'dist'
+          javascript-obfuscator ./ --output ./dist --compact true --self-defending true
+
+      - name: Deploy para Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # O segredo é este comando abaixo que aponta para a pasta 'dist'
+          command: pages deploy ./dist --project-name=scout-21
